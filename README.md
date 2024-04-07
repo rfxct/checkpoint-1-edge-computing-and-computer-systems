@@ -20,5 +20,5 @@ Se trata do checkpoint/avaliação para a matéria de Edge Computing and Compute
 - Felipe Vicente (RM 555819)
 
 # Protótipo
-O projeto também pode ser acessado [clicando aqui](https://www.tinkercad.com/things/5tN7Bh79eZQ-mighty-gaaris/editel?sharecode=4PG9bVAOwikkziVcy1_7JeyC9eYHlpRVG7i4hFhkLZg)
+O projeto também pode ser acessado [clicando aqui](https://www.tinkercad.com/things/5tN7Bh79eZQ-marcos-checkpoint-1-edge-computing-and-computer-systems?sharecode=n3ahyRt0bL6_DzkIpq6nMUqiI9Wcj8bBSvguAGAPDG8)
 <img src="docs/prototipo.png" />
