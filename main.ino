@@ -3,24 +3,25 @@
 #define LED_PROBLEMA 2
 
 #define LDR_SENSOR A0
-
 #define BUZZER 5
+
+long tempoInicio = 0;
+bool buzzerAtivo = false;
+bool aguardandoReset = false;
 
 void setup()
 {
-    pinMode(LED_OK, OUTPUT);
-    pinMode(LED_ALERTA, OUTPUT);
-    pinMode(LED_PROBLEMA, OUTPUT);
+  pinMode(LED_OK, OUTPUT);
+  pinMode(LED_ALERTA, OUTPUT);
+  pinMode(LED_PROBLEMA, OUTPUT);
 
-	  Serial.begin(9600);
+  Serial.begin(9600);
 }
 
 void loop()
 {
-  int luminosidade = analogRead(LDR_SENSOR);
   // MIN: 6 - MAX: 679
-
-  Serial.println(luminosidade);
+  int luminosidade = analogRead(LDR_SENSOR);
 
   // 6 - 200
   if (luminosidade < 200) {
@@ -30,7 +31,7 @@ void loop()
     // RESET
     digitalWrite(LED_ALERTA, LOW);
     digitalWrite(LED_PROBLEMA, LOW);
-  // 200 - 400
+    // 200 - 450
   } else if (luminosidade < 450) {
     // LED Alerta
     digitalWrite(LED_ALERTA, HIGH);
@@ -39,19 +40,32 @@ void loop()
     digitalWrite(LED_OK, LOW);
     digitalWrite(LED_PROBLEMA, LOW);
 
-    // Tocar buzina durante 3 segundos
-    digitalWrite(BUZZER, HIGH);
-    delay(3000);
+    Serial.println("AGUARDANDO-RESET = " + String(aguardandoReset));
+    // Caso o LED ainda esteja em estado de Alerta, ele espera 1,5s para reiniciar o buzzer após ele tocar por 3s
+    if (!aguardandoReset) {
+      Serial.println("BUZZER-ATIVO = " + String(buzzerAtivo));
 
-    // Parar buzina por 2 segundos depois de tocar
-    digitalWrite(BUZZER, LOW);
-    delay(2000);
-  // 400 - 679
+      if (!buzzerAtivo) {
+        tempoInicio = millis();
+        buzzerAtivo = true;
+      } else if (millis() - tempoInicio <= 3000) {
+        digitalWrite(BUZZER, HIGH); // Liga o buzzer
+      } else {
+        // Desliga o buzzer após 3 segundos
+        digitalWrite(BUZZER, LOW);
+        buzzerAtivo = false;
+        aguardandoReset = true;
+      }
+    } else if (millis() - tempoInicio >= 1500) {
+      aguardandoReset = false;
+    }
+    // 450 - 679
   } else {
     // LED Problema
-	  digitalWrite(LED_PROBLEMA, HIGH);
+    digitalWrite(LED_PROBLEMA, HIGH);
 
     // RESET
     digitalWrite(LED_OK, LOW);
     digitalWrite(LED_ALERTA, LOW);
   }
+}
