@@ -13,8 +13,7 @@ long tempoInicio = 0;
 bool buzzerAtivo = false;
 bool aguardandoReset = false;
 
-void setup()
-{
+void setup() {
   pinMode(LED_OK, OUTPUT);
   pinMode(LED_ALERTA, OUTPUT);
   pinMode(LED_PROBLEMA, OUTPUT);
@@ -22,8 +21,7 @@ void setup()
   Serial.begin(9600);
 }
 
-void loop()
-{
+void loop() {
   // MIN: 6 - MAX: 679
   int luminosidade = analogRead(LDR_SENSOR);
 
@@ -43,28 +41,6 @@ void loop()
     // Reset LEDs
     digitalWrite(LED_OK, LOW);
     digitalWrite(LED_PROBLEMA, LOW);
-
-    /* Caso o LED ainda esteja em estado de Alerta,
-    	ele espera 2s para reiniciar o buzzer após ele tocar por 3s
-	*/
-    if (!aguardandoReset) {
-      if (!buzzerAtivo) {
-      	Serial.println("BUZZER INICIADO");
-        tempoInicio = millis();
-        buzzerAtivo = true;
-      } else if (millis() - tempoInicio <= DURACAO) {
-        digitalWrite(BUZZER, HIGH);
-      } else {
-      	Serial.println("DESLIGANDO BUZZER");
-        // Desliga o buzzer após 3 segundos
-        digitalWrite(BUZZER, LOW);
-        buzzerAtivo = false;
-        aguardandoReset = true;
-      }
-    } else if (millis() - tempoInicio >= TEMPO_RESET + DURACAO) {
-      Serial.println("BUZZER REINICIADO APÓS 1,5 SEGUNDOS");
-      aguardandoReset = false;
-    }
     // 450 - 679
   } else {
     // LED Problema
@@ -73,5 +49,33 @@ void loop()
     // Reset LEDs
     digitalWrite(LED_OK, LOW);
     digitalWrite(LED_ALERTA, LOW);
+  }
+
+  /* 
+    Caso o LED ainda esteja em estado de Alerta,
+    ele espera 2s para reiniciar o buzzer após ele tocar por 3s
+	*/
+  if (!aguardandoReset) {
+    if (!buzzerAtivo) {
+      if (digitalRead(LED_ALERTA) == HIGH) {
+
+        Serial.println("BUZZER INICIADO");
+        tempoInicio = millis();
+        buzzerAtivo = true;
+      }
+    } else {
+      if (millis() - tempoInicio <= DURACAO) {
+        digitalWrite(BUZZER, HIGH);
+      } else {
+        Serial.println("DESLIGANDO BUZZER");
+        // Desliga o buzzer após 3 segundos
+        digitalWrite(BUZZER, LOW);
+        buzzerAtivo = false;
+        aguardandoReset = true;
+      }
+    }
+  } else if (millis() - tempoInicio >= TEMPO_RESET + DURACAO) {
+    Serial.println("BUZZER REINICIADO APÓS 1,5 SEGUNDOS");
+    aguardandoReset = false;
   }
 }
