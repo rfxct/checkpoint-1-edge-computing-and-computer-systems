@@ -17,6 +17,7 @@ void setup() {
   pinMode(LED_OK, OUTPUT);
   pinMode(LED_ALERTA, OUTPUT);
   pinMode(LED_PROBLEMA, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
 
   Serial.begin(9600);
 }
@@ -54,7 +55,7 @@ void loop() {
   /* 
     Caso o LED ainda esteja em estado de Alerta,
     ele espera 2s para reiniciar o buzzer após ele tocar por 3s
-	*/
+  */
   if (!aguardandoReset) {
     if (!buzzerAtivo) {
       if (digitalRead(LED_ALERTA) == HIGH) {
