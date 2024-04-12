@@ -26,23 +26,23 @@ void loop() {
   // MIN: 6 - MAX: 679
   int luminosidade = analogRead(LDR_SENSOR);
 
-  // 6 - 200
-  if (luminosidade < 200) {
+  // 6 - 300
+  if (luminosidade < 300) {
     // LED OK
     digitalWrite(LED_OK, HIGH);
 
     // Reset LEDs
     digitalWrite(LED_ALERTA, LOW);
     digitalWrite(LED_PROBLEMA, LOW);
-    // 200 - 450
-  } else if (luminosidade < 450) {
+    // 300 - 500
+  } else if (luminosidade < 500) {
     // LED Alerta
     digitalWrite(LED_ALERTA, HIGH);
 
     // Reset LEDs
     digitalWrite(LED_OK, LOW);
     digitalWrite(LED_PROBLEMA, LOW);
-    // 450 - 679
+    // 500 - 679
   } else {
     // LED Problema
     digitalWrite(LED_PROBLEMA, HIGH);
